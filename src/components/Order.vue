@@ -3,7 +3,11 @@
     <div class="order-id">Order ID: {{ order.id }}</div>
     <div class="order-date">Date: {{ order.date }}</div>
     <ul class="order-items">
-      <li v-for="item in order.items" :key="item.id">
+      <li
+        v-for="item in order.items"
+        :key="item.id"
+        :style="{ backgroundColor: getItemColor(item.id) }"
+      >
         {{ item.id }} : {{ item.quantity }}
       </li>
     </ul>
@@ -12,6 +16,7 @@
 
 <script lang="ts">
   import { Options, Vue } from 'vue-class-component'
+  import { useStore } from 'vuex'
 
   @Options({
     props: {
@@ -23,10 +28,15 @@
     },
   })
   export default class Order extends Vue {
+    private store = useStore()
     public order!: {
       id: string
       date: Date
       items: { id: string; quantity: number }[]
+    }
+
+    getItemColor(itemId: string): string {
+      return this.store.getters.getColorByItemId(itemId)
     }
   }
 </script>

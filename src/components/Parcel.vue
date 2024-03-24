@@ -9,7 +9,11 @@
     <div class="parcel-items">
       Items:
       <ul>
-        <li v-for="item in parcel.items" :key="item.item_id">
+        <li
+          v-for="item in parcel.items"
+          :key="item.item_id"
+          :style="{ backgroundColor: getItemColor(item.item_id) }"
+        >
           {{ item.item_id }} : {{ item.quantity }}
         </li>
       </ul>
@@ -19,6 +23,7 @@
 
 <script lang="ts">
   import { Options, Vue } from 'vue-class-component'
+  import { useStore } from 'vuex'
   import { IParcel } from '@/models/parcel'
 
   @Options({
@@ -27,7 +32,12 @@
     },
   })
   export default class Parcel extends Vue {
+    private store = useStore()
     public parcel!: IParcel
+
+    getItemColor(itemId: string): string {
+      return this.store.getters.getColorByItemId(itemId)
+    }
   }
 </script>
 

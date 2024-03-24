@@ -16,6 +16,7 @@
 
 <script lang="ts">
   import { Options, Vue } from 'vue-class-component'
+  import { useStore } from 'vuex'
   import { IOrder } from '@/models/order'
   import { IParcel } from '@/models/parcel'
   import Order from '@/components/Order.vue'
@@ -36,10 +37,13 @@
     private parcels: IParcel[] = []
 
     public mounted(): void {
+      const store = useStore()
+
       // FETCH ORDERS
       fetchOrders().then(response => {
         const fetchedOrders = response.data
         this.mapAndSaveOrders(fetchedOrders)
+        store.dispatch('colorPanelLoad', fetchedOrders)
       })
 
       // FETCH PARCELS
