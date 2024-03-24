@@ -1,7 +1,10 @@
 <template>
   <div class="about">
     <h1>Parcel view</h1>
-    <div class="row" v-for="order in orders" :key="order.id">
+    <div v-if="displayError">
+      {{ errorMessage }}
+    </div>
+    <div v-else class="row" v-for="order in orders" :key="order.id">
       <div class="col"> <Order :order="order" /></div>
       <div class="col">
         <ParcelProfit :parcels="parcels.filter(p => p.orderId === order.id)" />
@@ -9,7 +12,8 @@
           v-for="parcel in parcels.filter(p => p.orderId === order.id)"
           :key="parcel.trackingId"
           :parcel="parcel"
-      /></div>
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -33,6 +37,8 @@
     },
   })
   export default class HomeView extends Vue {
+    private displayError = false
+    private errorMessage = ''
     private orders: IOrder[] = []
     private parcels: IParcel[] = []
 
@@ -40,17 +46,27 @@
       const store = useStore()
 
       // FETCH ORDERS
-      fetchOrders().then(response => {
-        const fetchedOrders = response.data
-        this.mapAndSaveOrders(fetchedOrders)
-        store.dispatch('colorPanelLoad', fetchedOrders)
-      })
+      fetchOrders()
+        .then(response => {
+          const fetchedOrders = response.data
+          this.mapAndSaveOrders(fetchedOrders)
+          store.dispatch('colorPanelLoad', fetchedOrders)
+        })
+        .catch(e => {
+          this.errorMessage = JSON.stringify(e.response.data)
+          this.displayError = true
+        })
 
       // FETCH PARCELS
-      fetchParcels().then(response => {
-        const fetchedParcels = response.data
-        this.parcels = fetchedParcels
-      })
+      fetchParcels()
+        .then(response => {
+          const fetchedParcels = response.data
+          this.parcels = fetchedParcels
+        })
+        .catch(e => {
+          this.errorMessage = JSON.stringify(e.response.data)
+          this.displayError = true
+        })
     }
 
     private mapAndSaveOrders(
