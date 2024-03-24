@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h1>{{ order.id }}</h1>
-    <div>{{ order.date }}</div>
-    <ul>
+  <div class="order-details">
+    <div class="order-id">Order ID: {{ order.id }}</div>
+    <div class="order-date">Date: {{ order.date }}</div>
+    <ul class="order-items">
       <li v-for="item in order.items" :key="item.id">
         {{ item.id }} : {{ item.quantity }}
       </li>
@@ -31,4 +31,35 @@
   }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .order-details {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+
+    .order-id,
+    .order-date {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .order-items {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        background-color: #fff;
+        margin: 5px 0;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+
+        &:hover {
+          background-color: #eef;
+        }
+      }
+    }
+  }
+</style>
