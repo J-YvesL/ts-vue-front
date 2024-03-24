@@ -1,7 +1,4 @@
-interface IItem {
-  item_id: string
-  quantity: number
-}
+import { IItem } from './items'
 
 export interface IParcel {
   items: IItem[]
